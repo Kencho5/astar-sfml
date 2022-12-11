@@ -4,10 +4,11 @@
 
 class Grid {
 	private:
-		static const int width = 24, height = 16;
+		static const int width = 12, height = 8;
 		int grid[width][height];
 	public:
-		const int size = 50;
+		const int size = 100;
+		int H = 0;
 		Grid(){
 			for(int i = 0; i < width; i++) {
 				for(int j = 0; j < height; j++) {
@@ -43,19 +44,37 @@ class Grid {
 			}
 	    }
 
-		void setBlock(int x, int y, int type) {
-			switch(type) {
-				case 1:
-					grid[x][y] = 1;
-					break;
-				case 2:
-					grid[x][y] = 2;
-					break;
-				case 3:
-					grid[x][y] = 3;
-					break;
+	void setBlock(int x, int y, int type) {
+		switch(type) {
+			case 1:
+				grid[x][y] = 1;
+				break;
+			case 2:
+				grid[x][y] = 2;
+				break;
+			case 3:
+				grid[x][y] = 3;
+				break;
+		}
+	}
+
+	void calculateH() {
+		int startH = 0, startV = 0;
+		int endH = 0, endV = 0;
+
+		for(int i = 0; i < width; i++) {
+			for(int j = 0; j < height; j++) {
+				if(grid[i][j] == 1) {
+					startH = i;
+					startV = j;
+				} else if(grid[i][j] == 2) {
+					endH = i;
+					endV = j;
+				}
 			}
 		}
+		H = abs(startH - endH) + abs(startV - endV);
+	}
 };
 
 int main() {
@@ -78,6 +97,9 @@ int main() {
 				type = 2;
 			} else if(event.key.code == sf::Keyboard::W) {
 				type = 3;
+			} else if(event.key.code == sf::Keyboard::Enter) {
+				grid.calculateH();
+				std::cout << grid.H;
 			}
         } 
 		else if (event.type == sf::Event::MouseButtonPressed) {
@@ -93,7 +115,7 @@ int main() {
 		}
 
         window.clear();
-		grid.draw(window);
+	grid.draw(window);
         window.display();
     }
 
@@ -102,8 +124,8 @@ int main() {
 
 // g++ main.cpp -I/opt/homebrew/Cellar/sfml/2.5.1_2/include -o app -L/opt/homebrew/Cellar/sfml/2.5.1_2/lib -lsfml-graphics -lsfml-window -lsfml-system && ./app
 
-//	0  0  0  0  0
-//	0  1  0  0  0
-//	0  0  0  0  0
-//	0  0  0  2  0
-//	0  0  0  0  0
+//	0  0  0  0  0  0
+//	0  1  0  0  0  0
+//	0  0  0  0  0  2
+//	0  0  0  0  0  0
+//	0  0  0  0  0  0

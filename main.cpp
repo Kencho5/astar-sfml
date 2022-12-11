@@ -24,24 +24,37 @@ class Grid {
 					shape.setOutlineColor(sf::Color::Black);
 					shape.setPosition(i * size, j * size);
 					
-					if(grid[i][j] == 0) {
-						shape.setFillColor(sf::Color::White);
-					} else if(grid[i][j] == 1) {
-						shape.setFillColor(sf::Color::Blue);
-					} else if(grid[i][j] == 2) {
-						shape.setFillColor(sf::Color::Red);
+					switch(grid[i][j]) {
+						case 0:
+							shape.setFillColor(sf::Color::White);
+							break;
+						case 1:
+							shape.setFillColor(sf::Color::Blue);
+							break;
+						case 2:
+							shape.setFillColor(sf::Color::Red);
+							break;
+						case 3:
+							shape.setFillColor(sf::Color::Black);
+							break;
 					}
 					window.draw(shape);
 				}
 			}
 	    }
 
-		void setStart(int x, int y) {
-			grid[x][y] = 1;
-		}
-
-		void setEnd(int x , int y) {
-			grid[x][y] = 2;
+		void setBlock(int x, int y, int type) {
+			switch(type) {
+				case 1:
+					grid[x][y] = 1;
+					break;
+				case 2:
+					grid[x][y] = 2;
+					break;
+				case 3:
+					grid[x][y] = 3;
+					break;
+			}
 		}
 };
 
@@ -50,6 +63,7 @@ int main() {
     window.setFramerateLimit(60);
 
 	Grid grid;
+	int type;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -59,7 +73,11 @@ int main() {
 			if (event.key.code == sf::Keyboard::Escape) window.close();
             if (event.type == sf::Event::Closed) window.close();
 			if(event.key.code == sf::Keyboard::S) {
-				std::cout << "test";
+				type = 1;
+			} else if(event.key.code == sf::Keyboard::E) {
+				type = 2;
+			} else if(event.key.code == sf::Keyboard::W) {
+				type = 3;
 			}
         } 
 		else if (event.type == sf::Event::MouseButtonPressed) {
@@ -69,9 +87,7 @@ int main() {
 			int gridX = floor(localPosition.x / grid.size);
 			int gridY = floor(localPosition.y / grid.size);
 			if(event.mouseButton.button == sf::Mouse::Left) {
-				grid.setStart(gridX, gridY);
-			} else if(event.mouseButton.button == sf::Mouse::Right) {
-				grid.setEnd(gridX, gridY);
+				grid.setBlock(gridX, gridY, type);
 			}
 			} 
 		}
@@ -85,3 +101,9 @@ int main() {
 }
 
 // g++ main.cpp -I/opt/homebrew/Cellar/sfml/2.5.1_2/include -o app -L/opt/homebrew/Cellar/sfml/2.5.1_2/lib -lsfml-graphics -lsfml-window -lsfml-system && ./app
+
+//	0  0  0  0  0
+//	0  1  0  0  0
+//	0  0  0  0  0
+//	0  0  0  2  0
+//	0  0  0  0  0

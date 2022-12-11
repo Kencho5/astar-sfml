@@ -8,7 +8,11 @@ class Grid {
 		int grid[width][height];
 	public:
 		const int size = 100;
-		int H = 0;
+		double H;
+
+		int startH = 0, startV = 0;
+		int endH = 0, endV = 0;
+
 		Grid(){
 			for(int i = 0; i < width; i++) {
 				for(int j = 0; j < height; j++) {
@@ -48,9 +52,16 @@ class Grid {
 		switch(type) {
 			case 1:
 				grid[x][y] = 1;
+				
+				startH = x;
+				startV = y;
+
 				break;
 			case 2:
 				grid[x][y] = 2;
+
+				endH = x;
+				endV = y;
 				break;
 			case 3:
 				grid[x][y] = 3;
@@ -59,21 +70,8 @@ class Grid {
 	}
 
 	void calculateH() {
-		int startH = 0, startV = 0;
-		int endH = 0, endV = 0;
-
-		for(int i = 0; i < width; i++) {
-			for(int j = 0; j < height; j++) {
-				if(grid[i][j] == 1) {
-					startH = i;
-					startV = j;
-				} else if(grid[i][j] == 2) {
-					endH = i;
-					endV = j;
-				}
-			}
-		}
-		H = abs(startH - endH) + abs(startV - endV);
+		H = std::sqrt(pow(startH - endH, 2) + pow(startV - endV, 2));
+		// H = abs(startH - endH) + abs(startV - endV);
 	}
 };
 

@@ -16,7 +16,7 @@ class Grid {
 		const int size = 50;
 		int F, G, H;
 
-		int startH = 0, startV = 0;
+		int startH = 0, startV = 0, curH, curV;
 		int endH = 0, endV = 0;
 
 		bool finish;
@@ -68,6 +68,9 @@ class Grid {
 				startH = x;
 				startV = y;
 
+				curH = x;
+				curV = y;
+
 				break;
 			case 2:
 				grid[x][y] = 2;
@@ -81,8 +84,8 @@ class Grid {
 		}
 	}
 
-	void calculateH(int startH, int startV) {
-		H = round(std::sqrt(pow(startH - endH, 2) + pow(startV - endV, 2)) * 10);
+	void calculateH(int sh, int sv) {
+		H = round(std::sqrt(pow(sh - endH, 2) + pow(sv - endV, 2)) * 10);
 		// H = abs(startH - endH) + abs(startV - endV);
 	}
 	
@@ -91,15 +94,11 @@ class Grid {
 		for(int i = -1; i <= 1; ++i) {
 			for(int j = -1; j <= 1; ++j) {
 				if(i != 0 || j != 0) {
-					if(grid[startH + i][startV + j] == 3) continue;
+					if(grid[curH + i][curV + j] == 3) continue;
 					
-					G = abs(i) + abs(j);
-					if(G == 2) {
-						G = 14;
-					} else {
-						G = 10;
-					}
-					calculateH(startH + i, startV + j);
+					G = abs(startH - curH + i) + abs(startV - curV + j);
+		
+					calculateH(curH + i, curV + j);
 
 					F = G + H;
 					adj.F = F;
@@ -114,13 +113,13 @@ class Grid {
 		getLowest();
 		std:: cout << lowest.F << " " << lowest.i << " " << lowest.j << std::endl << std::endl;
 
-		startH += lowest.i;
-		startV += lowest.j;
-		if(grid[startH][startV] == 2) {
+		curH += lowest.i;
+		curV += lowest.j;
+		if(grid[curH][curV] == 2) {
 			finish = true;
 			return;
 		} 
-		grid[startH][startV] = 4;
+		grid[curH][curV] = 4;
 	}
 
 	void getLowest() {

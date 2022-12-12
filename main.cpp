@@ -8,8 +8,7 @@ class Grid {
 		int grid[width][height];
 	public:
 		const int size = 100;
-		double H;
-		int G, F;
+		double F, G, H;
 
 		int startH = 0, startV = 0;
 		int endH = 0, endV = 0;
@@ -81,9 +80,10 @@ class Grid {
 				if(i != 0 || j != 0) {
 					// grid[startH + i][startV + j] = 3;
 					G = abs(i) + abs(j);
+					if(G == 2) G = 1.4;
 					calculateH(startH + i, startV + j);
 					F = G + H;
-					// std::cout << F << " " << G << " " << H << " " << i << " " << j << std::endl;
+					std::cout << F << " " << G << " " << H << " " << i << " " << j << std::endl;
 				}
 			}
 		}
@@ -137,8 +137,8 @@ int main() {
 
 // g++ main.cpp -I/opt/homebrew/Cellar/sfml/2.5.1_2/include -o app -L/opt/homebrew/Cellar/sfml/2.5.1_2/lib -lsfml-graphics -lsfml-window -lsfml-system && ./app
 
+//	1  0  0  0  0  0
 //	0  0  0  0  0  0
-//	0  1  0  0  0  0
-//	0  0  0  0  0  2
+//	0  0  2  0  0  0
 //	0  0  0  0  0  0
 //	0  0  0  0  0  0

@@ -9,6 +9,7 @@ class Grid {
 	public:
 		const int size = 100;
 		double H;
+		int G;
 
 		int startH = 0, startV = 0;
 		int endH = 0, endV = 0;
@@ -73,6 +74,16 @@ class Grid {
 		H = std::sqrt(pow(startH - endH, 2) + pow(startV - endV, 2));
 		// H = abs(startH - endH) + abs(startV - endV);
 	}
+	
+	void calculateG() {
+		for(int i = -1; i <= 1; ++i) {
+			for(int j = -1; j <= 1; ++j) {
+				if(i != 0 || j != 0) {
+					grid[startH + i][startV + j] = 3;
+				}
+			}
+		}
+	}
 };
 
 int main() {
@@ -96,8 +107,8 @@ int main() {
 			} else if(event.key.code == sf::Keyboard::W) {
 				type = 3;
 			} else if(event.key.code == sf::Keyboard::Enter) {
-				grid.calculateH();
-				std::cout << grid.H;
+				grid.calculateG();
+				// std::cout << grid.H;
 			}
         } 
 		else if (event.type == sf::Event::MouseButtonPressed) {

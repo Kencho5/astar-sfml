@@ -95,7 +95,7 @@ class Grid {
 			for(int j = -1; j <= 1; ++j) {
 				if(i != 0 || j != 0) {
 					if(grid[curH + i][curV + j] == 3) continue;
-					
+					if(grid[curH + i][curV + j] == 4) continue;
 					G = abs(startH - curH + i) + abs(startV - curV + j);
 		
 					calculateH(curH + i, curV + j);
@@ -164,15 +164,13 @@ int main() {
 				}
 			}
         } 
-		else if (event.type == sf::Event::MouseButtonPressed) {
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			sf::Vector2i localPosition = sf::Mouse::getPosition(window);
 
 			// calculating area clicked
 			int gridX = floor(localPosition.x / grid.size);
 			int gridY = floor(localPosition.y / grid.size);
-			if(event.mouseButton.button == sf::Mouse::Left) {
-				grid.setBlock(gridX, gridY, type);
-			}
+			grid.setBlock(gridX, gridY, type);
 			} 
 		}
 

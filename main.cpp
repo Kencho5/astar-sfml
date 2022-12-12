@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 class Grid {
 	private:
@@ -9,6 +10,7 @@ class Grid {
 	public:
 		const int size = 100;
 		double F, G, H;
+		std::vector<double> adj; 
 
 		int startH = 0, startV = 0;
 		int endH = 0, endV = 0;
@@ -78,15 +80,25 @@ class Grid {
 		for(int i = -1; i <= 1; ++i) {
 			for(int j = -1; j <= 1; ++j) {
 				if(i != 0 || j != 0) {
-					// grid[startH + i][startV + j] = 3;
 					G = abs(i) + abs(j);
 					if(G == 2) G = 1.4;
 					calculateH(startH + i, startV + j);
+
 					F = G + H;
+
 					std::cout << F << " " << G << " " << H << " " << i << " " << j << std::endl;
+					adj.push_back(F);
 				}
 			}
 		}
+	}
+
+	void getLowest() {
+		double min = adj[0];
+		for(int i = 1; i < adj.size(); i++) {
+			if(min > adj[i]) min = adj[i];
+		}
+		std::cout << min;
 	}
 };
 
@@ -112,7 +124,7 @@ int main() {
 				type = 3;
 			} else if(event.key.code == sf::Keyboard::Enter) {
 				grid.calculateG();
-				// std::cout << grid.G;
+				grid.getLowest();
 			}
         } 
 		else if (event.type == sf::Event::MouseButtonPressed) {

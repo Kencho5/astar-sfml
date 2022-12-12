@@ -4,7 +4,7 @@
 #include <vector>
 class Adj {
 	public:
-		double F;
+		int F;
 		int i;
 		int j;
 };
@@ -14,7 +14,7 @@ class Grid {
 		int grid[width][height];
 	public:
 		const int size = 50;
-		double F, G, H;
+		int F, G, H;
 
 		int startH = 0, startV = 0;
 		int endH = 0, endV = 0;
@@ -82,16 +82,23 @@ class Grid {
 	}
 
 	void calculateH(int startH, int startV) {
-		H = std::sqrt(pow(startH - endH, 2) + pow(startV - endV, 2));
+		H = round(std::sqrt(pow(startH - endH, 2) + pow(startV - endV, 2)) * 10);
 		// H = abs(startH - endH) + abs(startV - endV);
 	}
 	
 	void calculateG() {
+		arr.clear();
 		for(int i = -1; i <= 1; ++i) {
 			for(int j = -1; j <= 1; ++j) {
 				if(i != 0 || j != 0) {
+					if(grid[startH + i][startV + j] == 3) continue;
+					
 					G = abs(i) + abs(j);
-					if(G == 2) G = 1.4;
+					if(G == 2) {
+						G = 14;
+					} else {
+						G = 10;
+					}
 					calculateH(startH + i, startV + j);
 
 					F = G + H;
@@ -100,12 +107,13 @@ class Grid {
 					adj.j = j;
 
 					arr.push_back(adj);
-
 					std::cout << F << " " << G << " " << H << " " << i << " " << j << std::endl;
 				}
 			}
 		}
 		getLowest();
+		std:: cout << lowest.F << " " << lowest.i << " " << lowest.j << std::endl << std::endl;
+
 		startH += lowest.i;
 		startV += lowest.j;
 		if(grid[startH][startV] == 2) {
@@ -118,7 +126,7 @@ class Grid {
 	void getLowest() {
 		double min = arr[0].F;
 		for(int i = 1; i < arr.size(); i++) {
-			if(min > arr[i].F) { 
+			if(min >= arr[i].F) { 
 				min = arr[i].F;
 				lowest = arr[i];
 			}

@@ -2,7 +2,12 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-
+class Adj {
+	public:
+		double F;
+		int i;
+		int j;
+};
 class Grid {
 	private:
 		static const int width = 12, height = 8;
@@ -10,10 +15,13 @@ class Grid {
 	public:
 		const int size = 100;
 		double F, G, H;
-		std::vector<double> adj; 
 
 		int startH = 0, startV = 0;
 		int endH = 0, endV = 0;
+
+		bool finish;
+		Adj adj, lowest;
+		std::vector<Adj> arr;
 
 		Grid(){
 			for(int i = 0; i < width; i++) {
@@ -44,6 +52,8 @@ class Grid {
 						case 3:
 							shape.setFillColor(sf::Color::Black);
 							break;
+						case 4:
+							shape.setFillColor(sf::Color::Green);
 					}
 					window.draw(shape);
 				}
@@ -85,20 +95,34 @@ class Grid {
 					calculateH(startH + i, startV + j);
 
 					F = G + H;
+					adj.F = F;
+					adj.i = i;
+					adj.j = j;
+
+					arr.push_back(adj);
 
 					std::cout << F << " " << G << " " << H << " " << i << " " << j << std::endl;
-					adj.push_back(F);
 				}
 			}
 		}
+		getLowest();
+		startH += lowest.i;
+		startV += lowest.j;
+		if(grid[startH][startV] == 2) {
+			finish = true;
+			return;
+		} 
+		grid[startH][startV] = 4;
 	}
 
 	void getLowest() {
-		double min = adj[0];
-		for(int i = 1; i < adj.size(); i++) {
-			if(min > adj[i]) min = adj[i];
+		double min = arr[0].F;
+		for(int i = 1; i < arr.size(); i++) {
+			if(min > arr[i].F) { 
+				min = arr[i].F;
+				lowest = arr[i];
+			}
 		}
-		std::cout << min;
 	}
 };
 
@@ -123,8 +147,9 @@ int main() {
 			} else if(event.key.code == sf::Keyboard::W) {
 				type = 3;
 			} else if(event.key.code == sf::Keyboard::Enter) {
-				grid.calculateG();
-				grid.getLowest();
+				while(grid.finish != true) {
+					grid.calculateG();
+				}
 			}
         } 
 		else if (event.type == sf::Event::MouseButtonPressed) {

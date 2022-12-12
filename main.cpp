@@ -10,10 +10,10 @@ class Adj {
 };
 class Grid {
 	private:
-		static const int width = 12, height = 8;
+		static const int width = 38, height = 20;
 		int grid[width][height];
 	public:
-		const int size = 100;
+		const int size = 50;
 		double F, G, H;
 
 		int startH = 0, startV = 0;
@@ -127,7 +127,7 @@ class Grid {
 };
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(1200, 800), "a* pathfinding");
+    sf::RenderWindow window(sf::VideoMode(1900, 1000), "a* pathfinding");
     window.setFramerateLimit(60);
 
 	Grid grid;
@@ -149,6 +149,11 @@ int main() {
 			} else if(event.key.code == sf::Keyboard::Enter) {
 				while(grid.finish != true) {
 					grid.calculateG();
+					sf::sleep(sf::milliseconds(20));
+
+					window.clear();
+					grid.draw(window);
+					window.display();
 				}
 			}
         } 

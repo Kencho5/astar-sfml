@@ -81,6 +81,9 @@ class Grid {
 			case 3:
 				grid[x][y] = 3;
 				break;
+			case 4:
+				grid[x][y] = 0;
+				break;
 		}
 	}
 
@@ -131,6 +134,14 @@ class Grid {
 			}
 		}
 	}
+	void reset() {
+		for(int i = 0; i < width; i++) {
+			for(int j = 0; j < height; j++) {
+				grid[i][j] = 0;
+			}
+		}
+		finish = false;
+	}
 };
 
 int main() {
@@ -147,16 +158,15 @@ int main() {
 		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Escape) window.close();
             if (event.type == sf::Event::Closed) window.close();
-			if(event.key.code == sf::Keyboard::S) {
-				type = 1;
-			} else if(event.key.code == sf::Keyboard::E) {
-				type = 2;
-			} else if(event.key.code == sf::Keyboard::W) {
-				type = 3;
-			} else if(event.key.code == sf::Keyboard::Enter) {
+			if(event.key.code == sf::Keyboard::S) type = 1;
+			else if(event.key.code == sf::Keyboard::E) type = 2;
+			else if(event.key.code == sf::Keyboard::W) type = 3;
+			else if(event.key.code == sf::Keyboard::C) type = 4;
+			else if(event.key.code == sf::Keyboard::R) grid.reset();
+			else if(event.key.code == sf::Keyboard::Enter) {
 				while(grid.finish != true) {
 					grid.calculateG();
-					sf::sleep(sf::milliseconds(20));
+					sf::sleep(sf::milliseconds(35));
 
 					window.clear();
 					grid.draw(window);
@@ -170,7 +180,7 @@ int main() {
 			// calculating area clicked
 			int gridX = floor(localPosition.x / grid.size);
 			int gridY = floor(localPosition.y / grid.size);
-			grid.setBlock(gridX, gridY, type);
+				grid.setBlock(gridX, gridY, type);
 			} 
 		}
 
